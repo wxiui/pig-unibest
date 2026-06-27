@@ -7,40 +7,43 @@ import VueHook from 'alova/vue'
 import { toLoginPage } from '@/utils/toLoginPage'
 import { ContentTypeEnum, ResultEnum, ShowMessage } from './tools/enum'
 
-// 配置动态Tag
 export const API_DOMAINS = {
   DEFAULT: import.meta.env.VITE_SERVER_BASEURL,
   SECONDARY: import.meta.env.VITE_SERVER_BASEURL_SECONDARY,
 }
 
-/**
- * 创建请求实例
- */
+// 1. 重写认证配置（强制指定 token 格式 + 兼容 424）
 const { onAuthRequired, onResponseRefreshToken } = createServerTokenAuthentication<
   typeof VueHook,
   typeof uniappRequestAdapter
 >({
-  // 如果下面拦截不到，请使用 refreshTokenOnSuccess by 群友@琛
+  // 🔥 关键1：指定 token 格式为 Bearer {token}
+  token: () => {
+    const token = uni.getStorageSync('token') || ''
+    return token ? `Bearer ${token}` : '' // 直接返回完整的 Authorization 值
+  },
+  // 🔥 关键2：424 也判定为 token 过期
   refreshTokenOnError: {
     isExpired: (error) => {
-      return error.response?.status === ResultEnum.Unauthorized
+      return error.response?.status === ResultEnum.Unauthorized || error.response?.status === 424
     },
     handler: async () => {
       try {
-        // await authLogin();
+        // 刷新 token 逻辑（后续补充）
+        const tokenStore = (await import('@/stores/token')).useTokenStore()
+        await tokenStore.refreshToken()
       }
       catch (error) {
-        // 切换到登录页
         toLoginPage({ mode: 'reLaunch' })
         throw error
       }
     },
   },
+  // 🔥 关键3：强制设置 Authorization 头的 key
+  authHeader: 'Authorization',
 })
 
-/**
- * alova 请求实例
- */
+// 2. 创建 alova 实例
 const alovaInstance = createAlova({
   baseURL: API_DOMAINS.DEFAULT,
   ...AdapterUniapp(),
@@ -48,29 +51,22 @@ const alovaInstance = createAlova({
   statesHook: VueHook,
 
   beforeRequest: onAuthRequired((method) => {
-    // 设置默认 Content-Type
+    // 🔥 修复：Content-Type 字段名错误（ContentType → Content-Type）
     method.config.headers = {
-      ContentType: ContentTypeEnum.JSON,
-      Accept: 'application/json, text/plain, */*',
+      'Content-Type': ContentTypeEnum.JSON,
+      'Accept': 'application/json, text/plain, */*',
       ...method.config.headers,
     }
 
-    const { config } = method
-    const ignoreAuth = !config.meta?.ignoreAuth
-    console.log('ignoreAuth===>', ignoreAuth)
-    // 处理认证信息   自行处理认证问题
-    if (ignoreAuth) {
-      const token = 'getToken()'
-      if (!token) {
-        throw new Error('[请求错误]：未登录')
-      }
-      // method.config.headers.token = token;
-    }
-
     // 处理动态域名
+    const { config } = method
     if (config.meta?.domain) {
       method.baseURL = config.meta.domain
-      console.log('当前域名', method.baseURL)
+    }
+
+    // 🔥 关键4：登录接口强制跳过认证（避免循环加 token）
+    if (method.url?.includes('oauth2/token')) {
+      method.config.meta = { ...method.config.meta, ignoreAuth: true }
     }
   }),
 
@@ -83,13 +79,13 @@ const alovaInstance = createAlova({
       errMsg,
     } = response as UniNamespace.RequestSuccessCallbackResult
 
-    // 处理特殊请求类型（上传/下载）
+    // 处理上传/下载
     if (requestType === 'upload' || requestType === 'download') {
       return response
     }
 
-    // 处理 HTTP 状态码错误
-    if (statusCode !== 200) {
+    // 🔥 关键5：兼容 424 状态码（业务自定义 token 过期码，不拦截）
+    if (statusCode >= 400 && statusCode < 500 && statusCode !== 424 || statusCode >= 500) {
       const errorMessage = ShowMessage(statusCode) || `HTTP请求错误[${statusCode}]`
       console.error('errorMessage===>', errorMessage)
       uni.showToast({
@@ -99,9 +95,13 @@ const alovaInstance = createAlova({
       throw new Error(`${errorMessage}：${errMsg}`)
     }
 
-    // 处理业务逻辑错误
+    // 🔥 关键6：兼容登录接口无 code 的响应
+    if (method.url?.includes('oauth2/token')) {
+      return rawData // 登录接口直接返回，不判断 code
+    }
+
+    // 正常接口处理 code
     const { code, message, data } = rawData as IResponse
-    // 0和200当做成功都很普遍，这里直接兼容两者，见 ResultEnum
     if (code !== ResultEnum.Success0 && code !== ResultEnum.Success200) {
       if (config.meta?.toast !== false) {
         uni.showToast({
@@ -111,7 +111,6 @@ const alovaInstance = createAlova({
       }
       throw new Error(`请求错误[${code}]：${message}`)
     }
-    // 处理成功响应，返回业务数据
     return data
   }),
 })

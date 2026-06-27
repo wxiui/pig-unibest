@@ -21,8 +21,20 @@ export function http<T>(options: CustomRequestOptions) {
       // #endif
       // 响应成功
       success: async (res) => {
+        console.log(`res:${res}`)
         const responseData = res.data as IResponse<T>
+        console.log(`responseData:${responseData}`)
         const { code } = responseData
+        console.log(`code:${code}`)
+
+        // ==============================================
+        // 🔥 核心修复：登录接口不校验 code
+        // ==============================================
+        const isLoginApi = options.url?.includes('oauth2/token')
+        if (isLoginApi && res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(res.data as any)
+          return
+        }
 
         // 检查是否是401错误（包括HTTP状态码401或业务码401）
         const isTokenExpired = res.statusCode === 401 || code === 401

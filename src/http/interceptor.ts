@@ -2,6 +2,7 @@ import type { CustomRequestOptions } from '@/http/types'
 import { useTokenStore } from '@/store'
 import { getEnvBaseUrl } from '@/utils'
 import { stringifyQuery } from './tools/queryString'
+import other from '@/utils/other'
 
 // 请求基准地址
 const baseUrl = getEnvBaseUrl()
@@ -13,7 +14,7 @@ const httpInterceptor = {
     // 如果您使用了alova，则请把下面的代码放开注释
     // alova 执行流程：alova beforeRequest --> 本拦截器 --> alova responded
     // return options
-
+    options.url = other.adaptationUrl(options.url)
     // 非 alova 请求，正常执行
     // 接口请求支持通过 query 参数配置 queryString
     if (options.query) {
