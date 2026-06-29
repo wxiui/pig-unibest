@@ -43,7 +43,7 @@ async function doLogin() {
   }
 
   let name = formState.username.trim()
-  let pwd = formState.password.trim()
+  const pwd = formState.password.trim()
   const code_number = formState.code.trim()
   name = 'admin'
   if (!name) {
@@ -73,7 +73,16 @@ async function doLogin() {
     await uni.navigateBack()
   }
   catch (error) {
-    console.log('登录失败', error)
+    // 在这里处理验证码刷新，页面自有 verifyEnable / getVerifyCode
+    const errData = error?.data || error?.response?.data
+    const errMsg = errData?.msg || ''
+    if (errMsg.includes('用户名或密码错误') && verifyEnable.value) {
+      getVerifyCode()
+    }
+  }
+  // 新增：无论成功、失败，都关闭loading转圈
+  finally {
+    loginLoading.value = false
   }
 }
 

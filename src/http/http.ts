@@ -21,11 +21,11 @@ export function http<T>(options: CustomRequestOptions) {
       // #endif
       // 响应成功
       success: async (res) => {
-        console.log(`res:${res}`)
+        console.log(`res:${JSON.stringify(res)}`)
         const responseData = res.data as IResponse<T>
-        console.log(`responseData:${responseData}`)
+        console.log(`responseData:${JSON.stringify(responseData)}`)
         const { code } = responseData
-        console.log(`code:${code}`)
+        console.log(`code:${JSON.stringify(code)}`)
 
         // ==============================================
         // 🔥 核心修复：登录接口不校验 code
@@ -142,6 +142,8 @@ export function http<T>(options: CustomRequestOptions) {
  * @param url 后台地址
  * @param query 请求query参数
  * @param header 请求头，默认为json格式
+ * @param options
+ * @param options
  * @returns
  */
 export function httpGet<T>(url: string, query?: Record<string, any>, header?: Record<string, any>, options?: Partial<CustomRequestOptions>) {

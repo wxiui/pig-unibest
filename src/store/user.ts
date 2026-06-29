@@ -43,6 +43,7 @@ export const useUserStore = defineStore(
      */
     const fetchUserInfo = async () => {
       const res = await getUserInfo()
+      console.log(`getUserInfo${JSON.stringify(res)}`)
       setUserInfo(res)
       return res
     }

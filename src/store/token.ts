@@ -53,19 +53,35 @@ export const useTokenStore = defineStore('token', () => {
     updateNowTime()
     tokenInfo.value = val
 
-    // 计算并存储过期时间
-    const now = Date.now()
-    if (isSingleTokenRes(val)) {
-      // 单token模式
-      const expireTime = now + val.expiresIn * 1000
-      uni.setStorageSync('accessTokenExpireTime', expireTime)
-    }
-    else if (isDoubleTokenRes(val)) {
-      // 双token模式
-      const accessExpireTime = now + val.accessExpiresIn * 1000
-      const refreshExpireTime = now + val.refreshExpiresIn * 1000
+    // 判空保护，避免存入 undefined / null
+    if (!val)
+      return
+
+    // 双token模式
+    if (isDoubleTokenRes(val)) {
+      const { accessToken, refreshToken, accessExpiresIn, refreshExpiresIn } = val
+      console.log(`val.accessToken:${accessToken}`)
+      if (accessToken)
+        uni.setStorageSync('access_token', accessToken)
+      if (refreshToken)
+        uni.setStorageSync('refresh_token', refreshToken)
+
+      // 过期时间
+      const now = Date.now()
+      const accessExpireTime = now + accessExpiresIn * 1000
+      const refreshExpireTime = now + refreshExpiresIn * 1000
       uni.setStorageSync('accessTokenExpireTime', accessExpireTime)
       uni.setStorageSync('refreshTokenExpireTime', refreshExpireTime)
+    }
+    // 单token模式
+    else if (isSingleTokenRes(val)) {
+      const { token, expiresIn } = val
+      if (token)
+        uni.setStorageSync('access_token', token)
+
+      const now = Date.now()
+      const expireTime = now + expiresIn * 1000
+      uni.setStorageSync('accessTokenExpireTime', expireTime)
     }
   }
 
@@ -115,14 +131,16 @@ export const useTokenStore = defineStore('token', () => {
       accessExpiresIn: 7200,
       refreshExpiresIn: 2592000,
     }
-
+    console.log(`formattedToken.accessToken:${formattedToken.accessToken}`)
     // 1. 保存到tokenStore
     setTokenInfo(formattedToken)
 
     // 2. 保存到本地存储（和Web端一致）
-    uni.setStorageSync('token', loginRes.access_token)
-    uni.setStorageSync('refresh_token', loginRes.refresh_token)
     uni.setStorageSync('userId', loginRes.user_id)
+
+    // 新增：提前刷新token状态，保证store内tokenInfo同步完成
+    const tokenStore = useTokenStore()
+    await tokenStore.tryGetValidToken()
 
     // 3. 拉取用户信息
     const userStore = useUserStore()
@@ -170,11 +188,6 @@ export const useTokenStore = defineStore('token', () => {
         icon: 'none', // 用none避免和成功的success混淆
         duration: 2000,
       })
-
-      // 5. 密码错误时刷新验证码（如果开启了验证码）
-      if (errorMsg.includes('用户名或密码错误') && verifyEnable.value) {
-        getVerifyCode() // 调用你页面里的刷新验证码函数
-      }
 
       throw error // 继续抛出错误，让上层能捕获
     }
@@ -297,13 +310,18 @@ export const useTokenStore = defineStore('token', () => {
    * 检查是否有登录信息（不考虑token是否过期）
    */
   const hasLoginInfo = computed(() => {
+    console.log(`uni.getStorageSync('access_token')${uni.getStorageSync('access_token')}`)
+    console.log(`tokenInfo.value${JSON.stringify(tokenInfo.value)}`)
     if (!tokenInfo.value) {
+      console.log(`!tokenInfo.value${!tokenInfo.value}`)
       return false
     }
     if (isDoubleTokenMode) {
+      console.log(`isDoubleTokenMode${!tokenInfo.value}`)
       return isDoubleTokenRes(tokenInfo.value) && !!tokenInfo.value.accessToken
     }
     else {
+      console.log(`isSingleTokenMode${!tokenInfo.value}`)
       return isSingleTokenRes(tokenInfo.value) && !!tokenInfo.value.token
     }
   })

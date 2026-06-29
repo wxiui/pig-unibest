@@ -11,6 +11,12 @@ import * as CryptoJS from 'crypto-js'
 import other from '@/utils/other'
 
 /**
+ * https://www.ietf.org/rfc/rfc6749.txt
+ * OAuth 协议 4.3.1 要求格式为 form 而不是 JSON 注意！
+ */
+const FORM_CONTENT_TYPE = 'application/x-www-form-urlencoded';
+
+/**
  * 登录表单类型定义
  */
 export interface ILoginForm {
@@ -52,21 +58,17 @@ export function login(loginForm: ILoginForm): Promise<IAuthLoginRes> {
   const client = import.meta.env.VITE_OAUTH2_PASSWORD_CLIENT || '' // 兜底避免空值
   console.log('CryptoJS:', CryptoJS) // 现在能打印出对象，不会是 undefined
   const basicAuth = `Basic ${CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(client))}`
-
+  uni.setStorageSync('basicAuth', basicAuth)
   console.log(data)
   // 4. 发起请求，补充所有必要头信息
   return http.post<IAuthLoginRes>(
     '/auth/oauth2/token',
     data,
-    {
-      meta: {
-        ignoreAuth: false,
-      },
-    },
+    {},
     {
       'skipToken': true,
       'Authorization': basicAuth,
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': FORM_CONTENT_TYPE,
     },
   )
 }
@@ -76,8 +78,23 @@ export function login(loginForm: ILoginForm): Promise<IAuthLoginRes> {
  * @param refreshToken 刷新令牌
  * @returns Promise<IDoubleTokenRes> 新的Token信息
  */
-export function refreshToken(refreshToken: string): Promise<IDoubleTokenRes> {
-  return http.post<IDoubleTokenRes>('/auth/refreshToken', { refreshToken })
+export function refreshToken(refreshToken: string): Promise<IAuthLoginRes> {
+  const grant_type = 'refresh_token'
+  const scope = 'server'
+  // 1. 复制表单数据，避免修改原对象
+  const data = { refreshToken, grant_type, scope }
+  // 获取当前选中的 basic 认证信息
+  const basicAuth = uni.getStorageSync('basicAuth')
+  return http.post<IAuthLoginRes>(
+    '/auth/oauth2/token',
+    data,
+    {},
+    {
+      'skipToken': true,
+      'Authorization': basicAuth,
+      'Content-Type': FORM_CONTENT_TYPE,
+    },
+  )
 }
 
 /**

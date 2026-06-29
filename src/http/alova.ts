@@ -17,30 +17,22 @@ const { onAuthRequired, onResponseRefreshToken } = createServerTokenAuthenticati
   typeof VueHook,
   typeof uniappRequestAdapter
 >({
-  // 🔥 关键1：指定 token 格式为 Bearer {token}
-  token: () => {
-    const token = uni.getStorageSync('token') || ''
-    return token ? `Bearer ${token}` : '' // 直接返回完整的 Authorization 值
-  },
-  // 🔥 关键2：424 也判定为 token 过期
+  // 如果下面拦截不到，请使用 refreshTokenOnSuccess by 群友@琛
   refreshTokenOnError: {
     isExpired: (error) => {
-      return error.response?.status === ResultEnum.Unauthorized || error.response?.status === 424
+      return error.response?.status === ResultEnum.Unauthorized
     },
     handler: async () => {
       try {
-        // 刷新 token 逻辑（后续补充）
-        const tokenStore = (await import('@/stores/token')).useTokenStore()
-        await tokenStore.refreshToken()
+        // await authLogin();
       }
       catch (error) {
+        // 切换到登录页
         toLoginPage({ mode: 'reLaunch' })
         throw error
       }
     },
   },
-  // 🔥 关键3：强制设置 Authorization 头的 key
-  authHeader: 'Authorization',
 })
 
 // 2. 创建 alova 实例
@@ -64,9 +56,15 @@ const alovaInstance = createAlova({
       method.baseURL = config.meta.domain
     }
 
-    // 🔥 关键4：登录接口强制跳过认证（避免循环加 token）
-    if (method.url?.includes('oauth2/token')) {
-      method.config.meta = { ...method.config.meta, ignoreAuth: true }
+    const ignoreAuth = !config.meta?.ignoreAuth
+    console.log('ignoreAuth===>', ignoreAuth)
+    // 处理认证信息   自行处理认证问题
+    if (ignoreAuth) {
+      const token = 'getToken()'
+      if (!token) {
+        throw new Error('[请求错误]：未登录')
+      }
+      // method.config.headers.token = token;
     }
   }),
 
@@ -85,7 +83,8 @@ const alovaInstance = createAlova({
     }
 
     // 🔥 关键5：兼容 424 状态码（业务自定义 token 过期码，不拦截）
-    if (statusCode >= 400 && statusCode < 500 && statusCode !== 424 || statusCode >= 500) {
+    // eslint-disable-next-line style/no-mixed-operators
+    if (statusCode !== 424 && statusCode < 500 && statusCode >= 400 || statusCode >= 500) {
       const errorMessage = ShowMessage(statusCode) || `HTTP请求错误[${statusCode}]`
       console.error('errorMessage===>', errorMessage)
       uni.showToast({

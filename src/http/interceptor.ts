@@ -43,18 +43,40 @@ const httpInterceptor = {
       // #endif
       // TIPS: 如果需要对接多个后端服务，也可以在这里处理，拼接成所需要的地址
     }
+
     // 1. 请求超时
     options.timeout = 60000 // 60s
     // 2. （可选）添加小程序端请求头标识
     options.header = {
       ...options.header,
     }
-    // 3. 添加 token 请求头标识
-    const tokenStore = useTokenStore()
-    const token = tokenStore.updateNowTime().validToken
 
-    if (token) {
-      options.header.Authorization = `Bearer ${token}`
+    if (!options.header.skipToken) {
+      const tokenStore = useTokenStore().updateNowTime()
+      const tokenInfo = tokenStore.tokenInfo
+      let token = ''
+      if (import.meta.env.VITE_AUTH_MODE === 'double') {
+        token = (tokenInfo as any)?.accessToken ?? ''
+      }
+      else {
+        token = (tokenInfo as any)?.token ?? ''
+      }
+
+      // 兜底：读取独立存储的纯access_token（修复Pinia key冲突，不再读'token'键）
+      if (!token) {
+        token = uni.getStorageSync('access_token')
+      }
+
+      if (token) {
+        options.header.Authorization = `Bearer ${token}`
+      }
+    }
+
+    // 3. 对齐Web：处理Enc-Flag 报文加密逻辑（新增缺失分支）
+    const ENC_FLAG = 'Enc-Flag'
+    if (options.header[ENC_FLAG]) {
+      const enc = other.encryption(JSON.stringify(options.data), import.meta.env.VITE_PWD_ENC_KEY)
+      options.data = { encryption: enc }
     }
     return options
   },
