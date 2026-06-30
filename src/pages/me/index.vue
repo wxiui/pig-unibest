@@ -1,4 +1,5 @@
 <template>
+  <wd-toast />
   <view class="page-mine">
     <!-- 顶部用户信息卡片 -->
     <view class="user-card">
@@ -219,6 +220,10 @@ import { storeToRefs } from 'pinia'
 import { LOGIN_PAGE } from '@/router/config'
 import { useUserStore } from '@/store'
 import { useTokenStore } from '@/store/token'
+// 引入wot-ui内置toast工具函数
+import { useToast } from '@wot-ui/ui'
+// 创建toast实例
+const toast = useToast()
 
 definePage({
   style: {
@@ -226,6 +231,7 @@ definePage({
   },
 })
 
+const toastRef = ref<any>(null)
 const userStore = useUserStore()
 const tokenStore = useTokenStore()
 // 使用storeToRefs解构userInfo
@@ -271,7 +277,7 @@ function goStatPage(url: string) {
 
 // 检查更新
 function checkUpdate() {
-  uni.showToast({ title: t('mine.latest_version'), icon: 'success' })
+  toast.success(t('mine.latest_version'))
 }
 
 // 退出登录
