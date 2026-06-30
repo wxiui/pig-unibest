@@ -26,13 +26,70 @@ export type IAuthLoginRes = ISingleTokenRes | IDoubleTokenRes
 export type UserRole = string
 
 export interface IUserInfoRes {
-  userId: number
+  userId: string | number
   username: string
   nickname: string
-  avatar?: string
-  /** 同时支持单角色和多角色，你自行选择一种就行 */
-  role?: UserRole
-  roles?: UserRole[]
+  name: string
+  avatar: string
+  phone: string | null
+  email: string | null
+  salt: string | null
+  wxOpenid: string | null
+  qqOpenid: string | null
+  giteeOpenId: string | null
+  oscOpenId: string | null
+  createTime: string
+  updateTime: string
+  delFlag: string
+  lockFlag: string
+  companyId: string
+  dept?: {
+    deptId: string
+    name: string
+    type: string
+    companyId: string
+    company: boolean
+    sortOrder: number
+    createBy: string | null
+    updateBy: string | null
+    createTime: string
+    updateTime: string
+    parentId: string
+    treePath: string
+    delFlag: string
+  }
+  roleList?: Array<{
+    roleId: string
+    roleName: string
+    roleCode: string
+    roleDesc: string | null
+    roleWeight: number | null
+    createBy: string | null
+    updateBy: string | null
+    createTime: string
+    updateTime: string
+    delFlag: string
+    userMaxWeight: number | null
+  }>
+  postList?: Array<{
+    postId: string
+    manageOrgId: string | null
+    postCode: string
+    postName: string
+    postSort: number
+    isDuty: boolean | null
+    isJobType: boolean | null
+    isStat: boolean | null
+    remark: string | null
+    createBy: string | null
+    updateBy: string | null
+    delFlag: string
+    createTime: string
+    updateTime: string
+  }>
+  dutyList?: any[]
+  jobTypeList?: any[]
+  permissions: string[]
   [key: string]: any // 允许其他扩展字段
 }
 
@@ -77,10 +134,9 @@ export interface IUpdateInfo {
  * 更新用户信息
  */
 export interface IUpdatePassword {
-  id: number
-  oldPassword: string
-  newPassword: string
-  confirmPassword: string
+  password: string
+  newpassword1: string
+  newpassword2: string
 }
 
 /**

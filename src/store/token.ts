@@ -122,8 +122,6 @@ export const useTokenStore = defineStore('token', () => {
    * @returns Promise<void>
    */
   async function _postLogin(loginRes: any): Promise<void> { // 这里必须有 { 大括号
-    console.log('登录成功，开始处理token：', loginRes)
-
     // 后端下划线格式 → 前端驼峰格式
     const formattedToken = {
       accessToken: loginRes.access_token,
@@ -131,7 +129,6 @@ export const useTokenStore = defineStore('token', () => {
       accessExpiresIn: 7200,
       refreshExpiresIn: 2592000,
     }
-    console.log(`formattedToken.accessToken:${formattedToken.accessToken}`)
     // 1. 保存到tokenStore
     setTokenInfo(formattedToken)
 

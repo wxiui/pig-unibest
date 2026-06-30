@@ -79,7 +79,7 @@ export const customTabbarList: CustomTabBarItem[] = [
     roles: ['admin'],
   },
   {
-    pagePath: 'pages/me/me',
+    pagePath: 'pages/me/index',
     text: '%tabbar.me%',
     iconType: 'unocss',
     icon: 'i-carbon-user',

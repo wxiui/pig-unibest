@@ -7,5 +7,61 @@
   "alova.title": "Alova 请求",
   "weight": "{heavy}公斤",
   "detail": "{0}cm, {1}公斤",
-  "introduction": "我是 {name},身高:{detail.height},体重:{detail.weight}"
+  "introduction": "我是 {name},身高:{detail.height},体重:{detail.weight}",
+  "login": {
+    "hello": "您好",
+    "welcome": "欢迎登录",
+    "username": "用户名/手机号",
+    "password": "密码",
+    "code": "图形验证码",
+    "login": "登录",
+    "sms": "短信登录",
+    "forget": "忘记密码",
+    "other": "其它登录方式",
+    "agree_read": "同意并阅读",
+    "user_agreement": "《用户协议》",
+    "privacy_policy": "《隐私协议》",
+    "and": " 和 "
+  },
+  "msg": {
+    "toast_title": "提示",
+    "logout_success": "退出登录成功",
+    "latest_version": "当前已是最新版本"
+  },
+  "mine": {
+    "msg_notice": "消息通知",
+    "train": "培训",
+    "certificate": "证书",
+    "todo_hazard": "待办隐患",
+    "check_task": "排查任务",
+    "train_record": "培训记录",
+    "emergency_handle": "应急处置",
+    "my_todo_hazard": "我的待办隐患",
+    "my_check_task": "我的排查任务",
+    "my_train_record": "我的培训记录",
+    "my_emergency_handle": "我的应急处置",
+    "account_security": "账号安全设置",
+    "change_password": "修改登录密码",
+    "notice_setting": "消息通知设置",
+    "help_feedback": "帮助与反馈",
+    "about_us": "关于我们",
+    "version_update": "版本更新",
+    "logout": "退出登录",
+    "login": "登录",
+    "logout_confirm": "确定要退出当前账号吗？",
+    "latest_version": "当前已是最新版本"
+  },
+  "changePwd": {
+    "title": "修改密码",
+    "oldPwd": "原密码",
+    "newPwd": "新密码",
+    "confirmPwd": "确认新密码",
+    "submit": "确认修改",
+    "oldPwdTip": "请输入原密码",
+    "newPwdTip": "请输入新密码",
+    "pwdNotMatch": "两次密码输入不一致",
+    "pwdLengthTip": "密码长度不能少于6位",
+    "success": "密码修改成功，请重新登录",
+    "fail": "密码修改失败"
+  }
 }

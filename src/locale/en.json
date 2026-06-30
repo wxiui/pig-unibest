@@ -7,5 +7,61 @@
   "alova.title": "Alova Request",
   "weight": "{heavy}KG",
   "detail": "{0}cm, {1}KG",
-  "introduction": "I am {name},height:{detail.height},weight:{detail.weight}"
+  "introduction": "I am {name},height:{detail.height},weight:{detail.weight}",
+  "login": {
+    "hello": "Hello",
+    "welcome": "welcome to sign in",
+    "username": "Username or Phone Number",
+    "password": "Password",
+    "code": "Verification Code",
+    "login": "Sign In",
+    "sms": "SMS Sign In",
+    "forget": "Forgot Password",
+    "other": "Other Login Methods",
+    "agree_read": "I have read and agree to the",
+    "user_agreement": "User Agreement",
+    "privacy_policy": "Privacy Policy",
+    "and": " and "
+  },
+  "msg": {
+    "toast_title": "Tip",
+    "logout": "Logout Success",
+    "latest_version": "Already the latest version"
+  },
+  "mine": {
+    "msg_notice": "Message Notice",
+    "train": "Training",
+    "certificate": "Certificate",
+    "todo_hazard": "Pending Hazard",
+    "check_task": "Inspection Task",
+    "train_record": "Training Record",
+    "emergency_handle": "Emergency Handle",
+    "my_todo_hazard": "My Pending Hazard",
+    "my_check_task": "My Inspection Task",
+    "my_train_record": "My Training Record",
+    "my_emergency_handle": "My Emergency Handle",
+    "account_security": "Account Security Settings",
+    "change_password": "Change Login Password",
+    "notice_setting": "Message Notice Settings",
+    "help_feedback": "Help & Feedback",
+    "about_us": "About Us",
+    "version_update": "Version Update",
+    "logout": "Logout",
+    "login": "Login",
+    "logout_confirm": "Are you sure you want to log out of the current account?",
+    "latest_version": "Already the latest version"
+  },
+  "changePwd": {
+    "title": "Change Password",
+    "oldPwd": "Old Password",
+    "newPwd": "New Password",
+    "confirmPwd": "Confirm New Password",
+    "submit": "Confirm Modify",
+    "oldPwdTip": "Please input old password",
+    "newPwdTip": "Please input new password",
+    "pwdNotMatch": "Passwords do not match",
+    "pwdLengthTip": "Password length cannot be less than 6 digits",
+    "success": "Password changed successfully, please login again",
+    "fail": "Failed to change password"
+  }
 }

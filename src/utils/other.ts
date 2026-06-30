@@ -12,22 +12,22 @@ export function isMobile() {
 /**
  * 打开小窗口
  */
-export function openWindow(url: string, title: string, w: number, h: number) {
-  const dualScreenLeft = window.screenLeft ?? screen.left
-  const dualScreenTop = window.screenTop ?? screen.top
-
-  const width = window.innerWidth ?? document.documentElement.clientWidth ?? screen.width
-  const height = window.innerHeight ?? document.documentElement.clientHeight ?? screen.height
-
-  const left = width / 2 - w / 2 + dualScreenLeft
-  const top = height / 2 - h / 2 + dualScreenTop
-
-  return window.open(
-    url,
-    title,
-    `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=yes, copyhistory=no, width=${w}, height=${h}, top=${top}, left=${left}`,
-  )
-}
+// export function openWindow(url: string, title: string, w: number, h: number) {
+//   const dualScreenLeft = window.screenLeft ?? screen.left
+//   const dualScreenTop = window.screenTop ?? screen.top
+//
+//   const width = window.innerWidth ?? document.documentElement.clientWidth ?? screen.width
+//   const height = window.innerHeight ?? document.documentElement.clientHeight ?? screen.height
+//
+//   const left = width / 2 - w / 2 + dualScreenLeft
+//   const top = height / 2 - h / 2 + dualScreenTop
+//
+//   return window.open(
+//     url,
+//     title,
+//     `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=yes, copyhistory=no, width=${w}, height=${h}, top=${top}, left=${left}`,
+//   )
+// }
 
 /**
  * 加密处理
@@ -198,7 +198,7 @@ const other = {
   decryption,
   base64Encrypt,
   toUnderline,
-  openWindow,
+  // openWindow,
   getQueryString,
   adaptationUrl,
   resolveAllEunuchNodeId,

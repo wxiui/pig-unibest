@@ -1,9 +1,7 @@
 import type {
   IAuthLoginRes,
   ICaptcha,
-  IDoubleTokenRes,
   IUpdateInfo,
-  IUpdatePassword,
   IUserInfoRes,
 } from './types/login'
 import { http } from '@/http/http'
@@ -120,15 +118,6 @@ export function logout(): Promise<void> {
  */
 export function updateInfo(data: IUpdateInfo): Promise<any> {
   return http.post('/user/updateInfo', data)
-}
-
-/**
- * 修改用户密码
- * @param data 密码修改参数
- * @returns Promise<any>
- */
-export function updateUserPassword(data: IUpdatePassword): Promise<any> {
-  return http.post('/user/updatePassword', data)
 }
 
 /**

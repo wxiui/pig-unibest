@@ -6,7 +6,8 @@ import { FORGET_PAGE, LOGIN_PAGE } from '@/router/config'
 
 definePage({
   style: {
-    navigationStyle: 'custom',
+    // navigationStyle: 'custom',
+    navigationBarTitleText: '登录',
   },
 })
 const loginLoading = ref(false)
@@ -111,8 +112,8 @@ onMounted(() => {
   <view class="login-page">
     <view class="banner-wrap">
       <view class="banner-title">
-        <text>您好，</text>
-        <text class="title-line">欢迎登录~</text>
+        <text>{{ $t("login.hello") }}，</text>
+        <text class="title-line">{{ $t("login.welcome") }}~</text>
       </view>
       <image src="/static/login/machine_bg.png" mode="widthFix" class="banner-machine-img" />
     </view>
@@ -121,7 +122,7 @@ onMounted(() => {
       <!-- 用户名 -->
       <view class="input-block">
         <view class="input-label">
-          用户名/手机号
+          {{ $t("login.username") }}
         </view>
         <view class="input-box">
           <input v-model="formState.username" value="admin" type="text" placeholder="请输入手机号" class="native-input">
@@ -131,7 +132,7 @@ onMounted(() => {
       <!-- 密码 -->
       <view class="input-block">
         <view class="input-label flex-between">
-          <text>密码</text>
+          <text>{{ $t("login.password") }}</text>
         </view>
         <view class="input-box">
           <input v-model="formState.password" class="native-input" placeholder="请输入密码" type="safe-password">
@@ -141,7 +142,7 @@ onMounted(() => {
       <!-- 图形验证码（开启时显示） -->
       <view v-if="verifyEnable" class="input-block">
         <view class="input-label">
-          图形验证码
+          {{ $t("login.code") }}
         </view>
         <view class="code-row flex-between">
           <view class="input-box code-input">
@@ -156,26 +157,31 @@ onMounted(() => {
 
       <view class="protocol-row">
         <wd-checkbox v-model="agreeProtocol" shape="circle" />
+        <!-- 单行不换行容器 -->
         <text class="protocol-text">
-          同意并阅读
-          <text class="protocol-link" @click="goProtocol('用户协议')">《用户协议》</text>
-          和
-          <text class="protocol-link" @click="goProtocol('隐私协议')">《隐私协议》</text>
+          {{ $t("login.agree_read") }}
+          <text class="protocol-link" @click="goProtocol('用户协议')">
+            {{ $t("login.user_agreement") }}
+          </text>
+          {{ $t("login.and") }}
+          <text class="protocol-link" @click="goProtocol('隐私协议')">
+            {{ $t("login.privacy_policy") }}
+          </text>
         </text>
       </view>
 
       <wd-button block size="large" :loading="loginLoading" class="login-btn" @click="doLogin">
-        登录
+        {{ $t("login.login") }}
       </wd-button>
 
       <view class="switch-row flex-between">
-        <text class="switch-link" @click="goSmsLogin">短信登录</text>
-        <text class="switch-link" @click="goForget">忘记密码</text>
+        <text class="switch-link" @click="goSmsLogin">{{ $t("login.sms") }}</text>
+        <text class="switch-link" @click="goForget">{{ $t("login.forget") }}</text>
       </view>
 
       <view class="divider-row">
         <view class="divider-line" />
-        <text class="divider-text">其它登录方式</text>
+        <text class="divider-text">{{ $t("login.other") }}</text>
         <view class="divider-line" />
       </view>
 
@@ -279,7 +285,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 16rpx;
-  margin: 24rpx 0 60rpx;
+  margin: 24rpx 0 40rpx;
   .protocol-text {
     font-size: 24rpx;
     color: #333;
