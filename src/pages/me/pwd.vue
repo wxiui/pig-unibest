@@ -63,31 +63,32 @@ const form = ref({
   newpassword2: '',
 })
 const tokenStore = useTokenStore()
+const toast = useToast()
 
 // 提交修改密码
 function submit() {
   const { password, newpassword1, newpassword2 } = form.value
   // 基础校验
   if (!password) {
-    uni.showToast({ title: t('changePwd.oldPwdTip'), icon: 'none' })
+    toast.show(t('changePwd.oldPwdTip'))
     return
   }
   if (!newpassword1) {
-    uni.showToast({ title: t('changePwd.newPwdTip'), icon: 'none' })
+    toast.show(t('changePwd.newPwdTip'))
     return
   }
   if (newpassword1 !== newpassword2) {
-    uni.showToast({ title: t('changePwd.pwdNotMatch'), icon: 'none' })
+    toast.show(t('changePwd.pwdNotMatch'))
     return
   }
-  if (newpassword1.length < 6) {
-    uni.showToast({ title: t('changePwd.pwdLengthTip'), icon: 'none' })
+  if (newpassword1.length < 6 || newpassword1.length > 20) {
+    toast.show(t('changePwd.pwdLengthTip'))
     return
   }
 
   try {
     updateUserPassword(form.value)
-    uni.showToast({ title: t('changePwd.success'), icon: 'success' })
+    toast.show(t('changePwd.success'))
     // 修改成功后退出登录，返回登录页
     setTimeout(() => {
       tokenStore.logout()
@@ -97,7 +98,7 @@ function submit() {
   catch (error) {
     console.log(error)
     // 4. 显示精准错误提示
-    uni.showToast({ title: error.msg || t('changePwd.fail'), icon: 'none' })
+    toast.show(t('changePwd.fail'))
   }
 }
 </script>

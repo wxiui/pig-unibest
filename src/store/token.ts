@@ -13,7 +13,10 @@ import {
 } from '@/api/login'
 import { isDoubleTokenRes, isSingleTokenRes } from '@/api/types/login'
 import { useUserStore } from './user'
+import { t } from '@/locale'
 
+// 创建toast实例
+const toast = useToast()
 /**
  * 是否是双token模式
  */
@@ -154,18 +157,12 @@ export const useTokenStore = defineStore('token', () => {
   const login = async (loginForm: ILoginForm) => {
     try {
       const res = await _login(loginForm)
-      console.log('普通登录-res: ', res)
       await _postLogin(res)
-      await uni.showToast({
-        title: '登录成功',
-        icon: 'success',
-      })
+      toast.success(t('login.login_success'))
       return res
     }
     catch (error) {
-      console.error('登录失败:', error)
-
-      // 3. 精准区分错误类型，给出具体提示
+      // 精准区分错误类型，给出具体提示
       let errorMsg = '登录失败，请重试'
       // 解析后端返回的错误信息
       const errData = error?.data || error?.response?.data
@@ -179,12 +176,7 @@ export const useTokenStore = defineStore('token', () => {
         errorMsg = '网络异常，请检查网络后重试'
       }
 
-      // 4. 显示精准错误提示
-      await uni.showToast({
-        title: errorMsg,
-        icon: 'none', // 用none避免和成功的success混淆
-        duration: 2000,
-      })
+      toast.show(errorMsg)
 
       throw error // 继续抛出错误，让上层能捕获
     }
@@ -207,18 +199,12 @@ export const useTokenStore = defineStore('token', () => {
       const res = await _wxLogin(code)
       console.log('微信登录-res: ', res)
       await _postLogin(res)
-      uni.showToast({
-        title: '登录成功',
-        icon: 'success',
-      })
+      toast.show(t('login.login_success'))
       return res
     }
     catch (error) {
       console.error('微信登录失败:', error)
-      uni.showToast({
-        title: '微信登录失败，请重试',
-        icon: 'error',
-      })
+      toast.error('微信登录失败，请重试')
       throw error
     }
     finally {

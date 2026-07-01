@@ -3,8 +3,6 @@ import { onMounted, reactive, ref } from 'vue'
 import { useTokenStore } from '@/store/token'
 import { generateUUID } from '@/utils/other'
 import { FORGET_PAGE, LOGIN_PAGE } from '@/router/config'
-// 引入wot-ui内置toast工具函数
-import { useToast } from '@wot-ui/ui'
 // 创建toast实例
 const toast = useToast()
 
@@ -43,7 +41,7 @@ async function doLogin() {
     return
   }
   if (!agreeProtocol.value) {
-    toast.info('请同意用户协议和隐私协议')
+    toast.show('请同意用户协议和隐私协议')
     return
   }
 
@@ -52,16 +50,16 @@ async function doLogin() {
   const code_number = formState.code.trim()
   name = 'admin'
   if (!name) {
-    toast.info('请输入用户名/手机号')
+    toast.show('请输入用户名/手机号')
     return
   }
   if (!pwd) {
-    toast.info('请输入密码')
+    toast.show('请输入密码')
     return
   }
   // 开启验证码时，校验验证码非空
   if (verifyEnable.value && !code_number) {
-    toast.info('请输入图形验证码')
+    toast.show('请输入图形验证码')
     return
   }
 
@@ -113,7 +111,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <wd-toast />
   <view class="login-page">
     <view class="banner-wrap">
       <view class="banner-title">

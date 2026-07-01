@@ -21,7 +21,8 @@
     "agree_read": "同意并阅读",
     "user_agreement": "《用户协议》",
     "privacy_policy": "《隐私协议》",
-    "and": " 和 "
+    "and": " 和 ",
+    "login_success": "登录成功"
   },
   "msg": {
     "toast_title": "提示",

@@ -1,5 +1,4 @@
 <template>
-  <wd-toast />
   <view class="page-mine">
     <!-- 顶部用户信息卡片 -->
     <view class="user-card">
@@ -220,10 +219,6 @@ import { storeToRefs } from 'pinia'
 import { LOGIN_PAGE } from '@/router/config'
 import { useUserStore } from '@/store'
 import { useTokenStore } from '@/store/token'
-// 引入wot-ui内置toast工具函数
-import { useToast } from '@wot-ui/ui'
-// 创建toast实例
-const toast = useToast()
 
 definePage({
   style: {
@@ -231,11 +226,12 @@ definePage({
   },
 })
 
-const toastRef = ref<any>(null)
 const userStore = useUserStore()
 const tokenStore = useTokenStore()
 // 使用storeToRefs解构userInfo
 const { userInfo } = storeToRefs(userStore)
+// 创建toast实例
+const toast = useToast()
 
 // 微信小程序下登录
 async function handleLogin() {
@@ -289,10 +285,7 @@ function handleLogout() {
       if (res.confirm) {
         useTokenStore().logout()
         // 执行退出登录逻辑
-        uni.showToast({
-          title: t('msg.logout_success'),
-          icon: 'success',
-        })
+        toast.success(t('mine.logout_success'))
         uni.navigateTo({ url: LOGIN_PAGE })
       }
     },

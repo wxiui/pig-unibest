@@ -28,6 +28,8 @@ defineExpose({
 
 <template>
   <view>
+    <!-- 全局仅放一次 wd-toast，所有页面共用，不用每页写 -->
+    <wd-toast />
     <!-- 这个先隐藏了，知道这样用就行 -->
     <view class="hidden text-center">
       {{ helloKuRoot }}，这里可以配置全局的东西

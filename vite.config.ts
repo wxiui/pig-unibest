@@ -118,7 +118,7 @@ export default defineConfig(({ command, mode }) => {
       },
       UnoCSS(),
       AutoImport({
-        imports: ['vue', 'uni-app'],
+        imports: ['vue', 'uni-app', { '@wot-ui/ui': ['useToast'] }],
         dts: 'src/types/auto-import.d.ts',
         dirs: ['src/hooks'], // 自动导入 hooks
         vueTemplate: true, // default false

@@ -12,6 +12,9 @@ export const API_DOMAINS = {
   SECONDARY: import.meta.env.VITE_SERVER_BASEURL_SECONDARY,
 }
 
+// 创建toast实例
+const toast = useToast()
+
 // 1. 重写认证配置（强制指定 token 格式 + 兼容 424）
 const { onAuthRequired, onResponseRefreshToken } = createServerTokenAuthentication<
   typeof VueHook,
@@ -87,10 +90,7 @@ const alovaInstance = createAlova({
     if (statusCode !== 424 && statusCode < 500 && statusCode >= 400 || statusCode >= 500) {
       const errorMessage = ShowMessage(statusCode) || `HTTP请求错误[${statusCode}]`
       console.error('errorMessage===>', errorMessage)
-      uni.showToast({
-        title: errorMessage,
-        icon: 'error',
-      })
+      toast.error(errorMessage)
       throw new Error(`${errorMessage}：${errMsg}`)
     }
 
@@ -103,10 +103,7 @@ const alovaInstance = createAlova({
     const { code, message, data } = rawData as IResponse
     if (code !== ResultEnum.Success0 && code !== ResultEnum.Success200) {
       if (config.meta?.toast !== false) {
-        uni.showToast({
-          title: message,
-          icon: 'none',
-        })
+        toast.show(message)
       }
       throw new Error(`请求错误[${code}]：${message}`)
     }
