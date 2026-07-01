@@ -50,34 +50,41 @@ export const customTabbarList: CustomTabBarItem[] = [
     icon: 'i-carbon-home',
     // badge: 'dot',
   },
-  // 鼓包配置示例（2025-12-31）
-  // 中间鼓包tabbarItem配置：通常是扫描按钮、发布按钮、更多按钮等，点击触发业务逻辑
-  // {
-  //   pagePath: 'pages/me/me',
-  //   text: '我的',
-  //   // 1）在fg-tabbar.vue页面上引入一下并注释掉（见tabbar/index.vue代码第2行）
-  //   // 2）配置到 unocss.config.ts 的 safelist 中
-  //   iconType: 'image',
-  //   icon: '/static/tabbar/scan.png',
-  //   isBulge: true,
-  // },
   {
-    pagePath: 'pages/i18n/index',
-    text: '%tabbar.i18n%',
-    iconType: 'unocss',
-    icon: 'i-carbon-ibm-watson-language-translator',
-    // badge: 10,
-  },
-  {
-    pagePath: 'pages/about/about',
-    text: '%tabbar.about%',
-    // 1）在fg-tabbar.vue页面上引入一下并注释掉（见tabbar/index.vue代码第2行）
-    // 2）配置到 unocss.config.ts 的 safelist 中
+    pagePath: 'pages/train/index',
+    text: '%tabbar.train%',
     iconType: 'unocss',
     icon: 'i-carbon-menu',
     // badge: 10,
-    roles: ['admin'],
   },
+  // 鼓包配置示例（2025-12-31）
+  // 中间鼓包tabbarItem配置：通常是扫描按钮、发布按钮、更多按钮等，点击触发业务逻辑
+  {
+    pagePath: 'pages/me/me',
+    text: '我的',
+    // 1）在fg-tabbar.vue页面上引入一下并注释掉（见tabbar/index.vue代码第2行）
+    // 2）配置到 unocss.config.ts 的 safelist 中
+    iconType: 'image',
+    icon: '/static/tabbar/scan.png',
+    isBulge: true,
+  },
+  {
+    pagePath: 'pages/exam/index',
+    text: '%tabbar.exam%',
+    iconType: 'unocss',
+    icon: 'i-carbon-menu',
+    // badge: 10,
+  },
+  // {
+  //   pagePath: 'pages/about/about',
+  //   text: '%tabbar.about%',
+  //   // 1）在fg-tabbar.vue页面上引入一下并注释掉（见tabbar/index.vue代码第2行）
+  //   // 2）配置到 unocss.config.ts 的 safelist 中
+  //   iconType: 'unocss',
+  //   icon: 'i-carbon-menu',
+  //   // badge: 10,
+  //   roles: ['admin'],
+  // },
   {
     pagePath: 'pages/me/index',
     text: '%tabbar.me%',

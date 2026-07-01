@@ -1,10 +1,18 @@
 {
-  "tabbar.home": "Home",
-  "tabbar.about": "About",
-  "tabbar.me": "Me",
-  "tabbar.i18n": "I18n",
-  "i18n.title": "En Title",
-  "alova.title": "Alova Request",
+  "tabbar": {
+    "home": "Home",
+    "train": "Train",
+    "exam": "Exam",
+    "about": "About",
+    "me": "Me",
+    "i18n": "I18n"
+  },
+  "i18n": {
+    "title": "En Title"
+  },
+  "alova": {
+    "title": "Alova Request"
+  },
   "weight": "{heavy}KG",
   "detail": "{0}cm, {1}KG",
   "introduction": "I am {name},height:{detail.height},weight:{detail.weight}",
@@ -27,6 +35,34 @@
     "toast_title": "Tip",
     "logout": "Logout Success",
     "latest_version": "Already the latest version"
+  },
+  "train": {
+    "page_title": "培训中心",
+    "function_title": "培训功能",
+    "course_title": "推荐课程",
+    "stat_total": "全部培训",
+    "stat_join": "我的报名",
+    "stat_finish": "已完成",
+    "stat_cert": "获得证书",
+    "menu_create": "新建培训",
+    "menu_plan": "培训计划",
+    "menu_sign": "签到记录",
+    "menu_record": "我的培训"
+  },
+  "common": {
+    "more": "更多"
+  },
+  "exam": {
+    "page_title": "在线考试",
+    "has_unfinished": "待考",
+    "unfinished_title": "待参加考试",
+    "duration": "考试时长",
+    "start": "立即开考",
+    "function_title": "考试服务",
+    "menu_all": "全部考试",
+    "menu_score": "历史成绩",
+    "menu_notice": "考试须知",
+    "recent_score": "最近成绩"
   },
   "mine": {
     "msg_notice": "Message Notice",

@@ -53,4 +53,14 @@ onUnmounted(() => {
   min-height: 100vh;
   padding-bottom: 40rpx;
 }
+.custom-raised-button {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background: #1890ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -40rpx;
+}
 </style>

@@ -1,10 +1,18 @@
 {
-  "tabbar.home": "首页",
-  "tabbar.about": "关于",
-  "tabbar.me": "我的",
-  "tabbar.i18n": "多语言",
-  "i18n.title": "中文标题",
-  "alova.title": "Alova 请求",
+  "tabbar": {
+    "home": "首页",
+    "train": "培训",
+    "exam": "考试",
+    "about": "关于",
+    "me": "我的",
+    "i18n": "多语言"
+  },
+  "i18n": {
+    "title": "中文标题"
+  },
+  "alova": {
+    "title": "Alova 请求"
+  },
   "weight": "{heavy}公斤",
   "detail": "{0}cm, {1}公斤",
   "introduction": "我是 {name},身高:{detail.height},体重:{detail.weight}",
@@ -28,6 +36,34 @@
     "toast_title": "提示",
     "logout_success": "退出登录成功",
     "latest_version": "当前已是最新版本"
+  },
+  "train": {
+    "page_title": "培训中心",
+    "function_title": "培训功能",
+    "course_title": "推荐课程",
+    "stat_total": "全部培训",
+    "stat_join": "我的报名",
+    "stat_finish": "已完成",
+    "stat_cert": "获得证书",
+    "menu_create": "新建培训",
+    "menu_plan": "培训计划",
+    "menu_sign": "签到记录",
+    "menu_record": "我的培训"
+  },
+  "common": {
+    "more": "更多"
+  },
+  "exam": {
+    "page_title": "在线考试",
+    "has_unfinished": "待考",
+    "unfinished_title": "待参加考试",
+    "duration": "考试时长",
+    "start": "立即开考",
+    "function_title": "考试服务",
+    "menu_all": "全部考试",
+    "menu_score": "历史成绩",
+    "menu_notice": "考试须知",
+    "recent_score": "最近成绩"
   },
   "mine": {
     "msg_notice": "消息通知",
@@ -66,4 +102,4 @@
     "success": "密码修改成功，请重新登录",
     "fail": "密码修改失败"
   }
-}
+},
