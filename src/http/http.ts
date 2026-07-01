@@ -9,10 +9,10 @@ import { ResultEnum } from './tools/enum'
 // 刷新 token 状态管理
 let refreshing = false // 防止重复刷新 token 标识
 let taskQueue: (() => void)[] = [] // 刷新 token 请求队列
-// 创建toast实例
-const toast = useToast()
 
 export function http<T>(options: CustomRequestOptions) {
+  // 创建toast实例
+  const toast = useToast()
   // 1. 返回 Promise 对象
   return new Promise<T>((resolve, reject) => {
     uni.request({

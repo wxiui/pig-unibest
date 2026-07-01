@@ -12,9 +12,6 @@ export const API_DOMAINS = {
   SECONDARY: import.meta.env.VITE_SERVER_BASEURL_SECONDARY,
 }
 
-// 创建toast实例
-const toast = useToast()
-
 // 1. 重写认证配置（强制指定 token 格式 + 兼容 424）
 const { onAuthRequired, onResponseRefreshToken } = createServerTokenAuthentication<
   typeof VueHook,
@@ -79,7 +76,8 @@ const alovaInstance = createAlova({
       data: rawData,
       errMsg,
     } = response as UniNamespace.RequestSuccessCallbackResult
-
+    // 创建toast实例
+    const toast = useToast()
     // 处理上传/下载
     if (requestType === 'upload' || requestType === 'download') {
       return response

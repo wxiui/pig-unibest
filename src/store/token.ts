@@ -15,8 +15,6 @@ import { isDoubleTokenRes, isSingleTokenRes } from '@/api/types/login'
 import { useUserStore } from './user'
 import { t } from '@/locale'
 
-// 创建toast实例
-const toast = useToast()
 /**
  * 是否是双token模式
  */
@@ -35,6 +33,8 @@ const tokenInfoState = isDoubleTokenMode
     }
 
 export const useTokenStore = defineStore('token', () => {
+  // 创建toast实例
+  const toast = useToast()
   // 定义用户信息
   const tokenInfo = ref<IAuthLoginRes>({ ...tokenInfoState })
 
