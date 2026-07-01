@@ -48,5 +48,9 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
-
+.page-mine {
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
 </style>

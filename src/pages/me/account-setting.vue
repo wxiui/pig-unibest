@@ -1,6 +1,5 @@
 <template>
   <!-- 页面独立弹窗容器，解决useToast上下文丢失 -->
-  <wd-toast />
   <view class="page-account-setting">
     <!-- 安全设置分组 -->
     <wd-cell-group title="账号安全设置">
@@ -15,23 +14,26 @@
 
     <!-- 退出登录区域 -->
     <view class="logout-wrap">
-      <wd-button type="error" block @click="handleLogout">退出当前账号</wd-button>
+      <wd-button v-if="tokenStore.hasLogin" type="danger" block size="large" @click="handleLogout">
+        {{ $t("mine.logout") }}
+      </wd-button>
     </view>
   </view>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import { t } from '@/locale'
+import { LOGIN_PAGE } from '@/router/config'
 import { useTokenStore } from '@/store/token'
-import { useToast } from '@wot-ui/ui'
 
 // 页面内同步初始化toast，绑定当前页面wd-toast，彻底规避undefined报错
 const toast = useToast()
 const tokenStore = useTokenStore()
 
 definePage({
-  navigationBarTitleText: '账号安全设置',
+  style: {
+    navigationBarTitleText: '账号安全设置',
+  },
 })
 
 // 跳转：修改密码
@@ -57,20 +59,16 @@ function toLoginVerify() {
 // 退出登录弹窗确认
 function handleLogout() {
   uni.showModal({
-    title: '安全提示',
-    content: '退出后需要重新登录，确认退出当前账号？',
-    confirmText: '确认退出',
-    cancelText: '取消',
+    title: t('msg.toast_title'),
+    content: t('mine.logout_confirm'),
     success: (res) => {
       if (res.confirm) {
-        // 清除token、登录状态
-        tokenStore.logout()
-        toast.success('已安全退出账号')
-        setTimeout(() => {
-          uni.reLaunch({ url: '/pages/auth/login' })
-        }, 1000)
+        useTokenStore().logout()
+        // 执行退出登录逻辑
+        toast.success(t('mine.logout_success'))
+        uni.navigateTo({ url: LOGIN_PAGE })
       }
-    }
+    },
   })
 }
 </script>

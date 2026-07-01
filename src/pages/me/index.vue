@@ -64,10 +64,10 @@
                 <wd-icon name="info-circle-fill" color="#1890ff" size="40rpx" />
               </view>
               <text class="cell-title">{{ t('mine.my_todo_hazard') }}</text>
+              <view style="margin-top: -8rpx">
+                <wd-badge :value="todoCount" type="danger" />
+              </view>
             </view>
-          </template>
-          <template #right>
-            <wd-badge :value="todoCount" type="danger" />
           </template>
         </wd-cell>
         <wd-cell
@@ -184,6 +184,7 @@
         </wd-cell>
         <wd-cell
           is-link
+          value="内容"
           @click="checkUpdate"
         >
           <template #default>
@@ -192,33 +193,48 @@
                 <wd-icon name="refresh" color="#666" size="40rpx" />
               </view>
               <text class="cell-title">{{ t('mine.version_update') }}</text>
+              <span class="version-text">V1.0.0</span>
             </view>
-          </template>
-          <template #right>
-            <text class="version-text">V1.0.0</text>
           </template>
         </wd-cell>
       </wd-cell-group>
+      <!-- 系统与帮助相关 -->
+      <wd-cell-group custom-class="cell-group">
+        <wd-cell
+          :value="value[0]" is-link @click="show = true"
+        >
+          <template #default>
+            <view class="cell-left-wrap">
+              <view class="custom-prefix-icon">
+                <wd-icon name="refresh" color="#666" size="40rpx" />
+              </view>
+              <text class="cell-title">{{ t('mine.language_changed') }}</text>
+              <view>{{ langLabel() }}</view>
+            </view>
+          </template>
+        </wd-cell>
+        <wd-picker v-model="value" v-model:visible="show" :columns="languages" :before-confirm="beforeConfirm" />
+      </wd-cell-group>
     </view>
-
     <!-- 底部退出登录 -->
     <view class="logout-wrap">
       <wd-button v-if="tokenStore.hasLogin" type="danger" block size="large" @click="handleLogout">
         {{ $t("mine.logout") }}
       </wd-button>
-      <button v-else type="primary" class="w-full" @click="handleLogin">
+      <wd-button v-else type="primary" class="w-full" @click="handleLogin">
         {{ $t("mine.login") }}
-      </button>
+      </wd-button>
     </view>
   </view>
 </template>
 
 <script lang="ts" setup>
-import { t } from '@/locale'
+import i18n, { t } from '@/locale'
 import { storeToRefs } from 'pinia'
 import { LOGIN_PAGE } from '@/router/config'
 import { useUserStore } from '@/store'
 import { useTokenStore } from '@/store/token'
+import { setTabbarItem } from '@/tabbar/i18n'
 
 definePage({
   style: {
@@ -296,15 +312,46 @@ onMounted(() => {
   // 这里可以调用接口获取用户真实信息
   // getUserInfo()
 })
+
+const current = ref<string>(uni.getLocale())
+const show = ref(false)
+const value = ref<string[]>([current.value])
+const languages = ref([
+  {
+    value: 'zh-Hans',
+    label: '中文',
+  },
+  {
+    value: 'en',
+    label: '英文',
+  },
+])
+
+// 计算属性 回显label
+function langLabel() {
+  if (!Array.isArray(value.value) || value.value.length === 0) return ''
+  const selectVal = value.value[0]
+  const findItem = languages.value.find(col => col.value === selectVal)
+  return findItem?.label ?? ''
+}
+
+function beforeConfirm(value: string[]) {
+  current.value = value[0]
+  // 下面2句缺一不可！！！
+  uni.setLocale(value[0])
+  i18n.global.locale = value[0]
+
+  // 底部tabbar需要重新设置一下
+  setTabbarItem()
+  // 本页的标题也需要重新设置一下
+  uni.setNavigationBarTitle({
+    title: t('i18n.title'),
+  })
+  return true
+}
 </script>
 
 <style lang="scss" scoped>
-.page-mine {
-  background-color: #f5f7fa;
-  min-height: 100vh;
-  padding-bottom: 40rpx;
-}
-
 // 顶部用户卡片
 .user-card {
   padding: 80rpx 32rpx 80rpx;

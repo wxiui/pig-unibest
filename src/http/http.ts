@@ -5,14 +5,24 @@ import { useTokenStore } from '@/store/token'
 import { isDoubleTokenMode } from '@/utils'
 import { toLoginPage } from '@/utils/toLoginPage'
 import { ResultEnum } from './tools/enum'
+import { globalStore } from '@/main'
+
+function toastShow(msg: string) {
+  if (globalStore.$toast) {
+    globalStore.$toast.show(msg)
+  }
+}
+function toastClose() {
+  if (globalStore.$toast) {
+    globalStore.$toast.close()
+  }
+}
 
 // 刷新 token 状态管理
 let refreshing = false // 防止重复刷新 token 标识
 let taskQueue: (() => void)[] = [] // 刷新 token 请求队列
 
 export function http<T>(options: CustomRequestOptions) {
-  // 创建toast实例
-  const toast = useToast()
   // 1. 返回 Promise 对象
   return new Promise<T>((resolve, reject) => {
     uni.request({
@@ -65,8 +75,8 @@ export function http<T>(options: CustomRequestOptions) {
               // 刷新 token 成功
               refreshing = false
               nextTick(() => {
-                toast.close()
-                toast.show('token 刷新成功')
+                toastClose()
+                toastShow('token 刷新成功')
               })
               // 将任务队列的所有任务重新请求
               taskQueue.forEach(task => task())
@@ -77,8 +87,8 @@ export function http<T>(options: CustomRequestOptions) {
               // 刷新 token 失败，跳转到登录页
               nextTick(() => {
                 // 关闭其他弹窗
-                toast.close()
-                toast.show('登录已过期，请重新登录')
+                toastClose()
+                toastShow('登录已过期，请重新登录')
               })
               // 清除用户信息
               await tokenStore.logout()
@@ -100,7 +110,7 @@ export function http<T>(options: CustomRequestOptions) {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           // 处理业务逻辑错误
           if (code !== ResultEnum.Success0 && code !== ResultEnum.Success200) {
-            toast.show(responseData.msg || responseData.message || '请求错误')
+            toastShow(responseData.msg || responseData.message || '请求错误')
             return reject(responseData.data)
           }
           return resolve(responseData.data)
@@ -108,12 +118,12 @@ export function http<T>(options: CustomRequestOptions) {
 
         // 处理其他错误
         !options.hideErrorToast
-        && toast.show((res.data as any).msg || '请求错误')
+        && toastShow((res.data as any).msg || '请求错误')
         reject(res)
       },
       // 响应失败
       fail(err) {
-        toast.show('网络错误，换个网络试试')
+        toastShow('网络错误，换个网络试试')
         reject(err)
       },
     })

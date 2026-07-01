@@ -162,6 +162,7 @@ export const useTokenStore = defineStore('token', () => {
       return res
     }
     catch (error) {
+      console.error('登录失败:', error)
       // 精准区分错误类型，给出具体提示
       let errorMsg = '登录失败，请重试'
       // 解析后端返回的错误信息

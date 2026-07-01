@@ -1,8 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { getCurrentInstance, ref } from 'vue'
 import FgTabbar from '@/tabbar/index.vue'
 import { isPageTabbar } from './tabbar/store'
 import { currRoute } from './utils'
+// 导入包裹对象，不再直接导入$toast
+import { globalStore } from '@/main'
+
+const toastIns = useToast()
+// 修改对象内部属性，合法
+globalStore.$toast = toastIns
+const instance = getCurrentInstance()
+if (instance) {
+  instance.appContext.config.globalProperties.$toast = toastIns
+}
 
 const isCurrentPageTabbar = ref(true)
 onShow(() => {

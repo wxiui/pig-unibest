@@ -6,6 +6,13 @@ import { createServerTokenAuthentication } from 'alova/client'
 import VueHook from 'alova/vue'
 import { toLoginPage } from '@/utils/toLoginPage'
 import { ContentTypeEnum, ResultEnum, ShowMessage } from './tools/enum'
+import { globalStore } from '@/main'
+
+function toastError(msg: string) {
+  if (globalStore.$toast) {
+    globalStore.$toast.error(msg)
+  }
+}
 
 export const API_DOMAINS = {
   DEFAULT: import.meta.env.VITE_SERVER_BASEURL,
@@ -76,8 +83,6 @@ const alovaInstance = createAlova({
       data: rawData,
       errMsg,
     } = response as UniNamespace.RequestSuccessCallbackResult
-    // 创建toast实例
-    const toast = useToast()
     // 处理上传/下载
     if (requestType === 'upload' || requestType === 'download') {
       return response
@@ -88,7 +93,7 @@ const alovaInstance = createAlova({
     if (statusCode !== 424 && statusCode < 500 && statusCode >= 400 || statusCode >= 500) {
       const errorMessage = ShowMessage(statusCode) || `HTTP请求错误[${statusCode}]`
       console.error('errorMessage===>', errorMessage)
-      toast.error(errorMessage)
+      toastError(errorMessage)
       throw new Error(`${errorMessage}：${errMsg}`)
     }
 
@@ -101,7 +106,7 @@ const alovaInstance = createAlova({
     const { code, message, data } = rawData as IResponse
     if (code !== ResultEnum.Success0 && code !== ResultEnum.Success200) {
       if (config.meta?.toast !== false) {
-        toast.show(message)
+        toastError(message)
       }
       throw new Error(`请求错误[${code}]：${message}`)
     }

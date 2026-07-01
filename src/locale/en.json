@@ -46,6 +46,7 @@
     "help_feedback": "Help & Feedback",
     "about_us": "About Us",
     "version_update": "Version Update",
+    "language_changed": "Language changed",
     "logout": "Logout",
     "login": "Login",
     "logout_confirm": "Are you sure you want to log out of the current account?",

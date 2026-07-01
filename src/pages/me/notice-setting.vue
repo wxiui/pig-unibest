@@ -1,5 +1,4 @@
 <template>
-  <wd-toast />
   <view class="page-notice-setting">
     <wd-cell-group title="消息通知设置">
       <wd-cell title="系统通知">
@@ -71,12 +70,13 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { useToast } from '@wot-ui/ui'
 
 const toast = useToast()
 
 definePage({
-  navigationBarTitleText: '消息通知设置',
+  style: {
+    navigationBarTitleText: '消息通知设置',
+  },
 })
 
 // 消息开关配置
